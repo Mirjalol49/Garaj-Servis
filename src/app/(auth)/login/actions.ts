@@ -6,9 +6,17 @@ import { createClient } from '@/lib/supabase/server'
 import { z } from 'zod'
 
 const loginSchema = z.object({
-  phone: z.string().trim().regex(/^\+?[0-9]{7,15}$/),
+  phone: z
+    .string()
+    .trim()
+    .transform((value) => value.replace(/\D/g, ''))
+    .refine((value) => value.length >= 7 && value.length <= 15),
   password: z.string().min(6),
 })
+
+function phoneToLoginEmail(phone: string) {
+  return `${phone}@garaj-servis.local`
+}
 
 export async function login(formData: FormData) {
   const phone = String(formData.get('phone') ?? '')
@@ -22,7 +30,7 @@ export async function login(formData: FormData) {
   const supabase = await createClient()
 
   const { error } = await supabase.auth.signInWithPassword({
-    phone: parsed.data.phone,
+    email: phoneToLoginEmail(parsed.data.phone),
     password: parsed.data.password,
   })
 
