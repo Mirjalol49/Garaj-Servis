@@ -15,6 +15,12 @@ const carSchema = z.object({
   current_odometer: z.number().int().min(0).optional(),
   status: z.string().default('active'),
 })
+type CarInput = z.input<typeof carSchema>
+
+function getFormString(formData: FormData, key: string) {
+  const value = formData.get(key)
+  return typeof value === 'string' && value.length > 0 ? value : undefined
+}
 
 export async function createCar(formData: FormData) {
   const supabase = await createClient()
@@ -32,18 +38,25 @@ export async function createCar(formData: FormData) {
     }
   }
 
-  const rawData: Record<string, any> = {
+  const rawData: CarInput = {
     customer_company_id: formData.get('customer_company_id') as string,
     plate_number: rawPlate,
     status: (formData.get('status') as string) || 'active',
   }
 
-  if (formData.get('vin')) rawData.vin = formData.get('vin')
-  if (formData.get('make')) rawData.make = formData.get('make')
-  if (formData.get('model')) rawData.model = formData.get('model')
-  if (formData.get('color')) rawData.color = formData.get('color')
-  if (formData.get('year')) rawData.year = parseInt(formData.get('year') as string, 10)
-  if (formData.get('current_odometer')) rawData.current_odometer = parseInt(formData.get('current_odometer') as string, 10)
+  const vin = getFormString(formData, 'vin')
+  const make = getFormString(formData, 'make')
+  const model = getFormString(formData, 'model')
+  const color = getFormString(formData, 'color')
+  const year = getFormString(formData, 'year')
+  const currentOdometer = getFormString(formData, 'current_odometer')
+
+  if (vin) rawData.vin = vin
+  if (make) rawData.make = make
+  if (model) rawData.model = model
+  if (color) rawData.color = color
+  if (year) rawData.year = parseInt(year, 10)
+  if (currentOdometer) rawData.current_odometer = parseInt(currentOdometer, 10)
 
   const parsed = carSchema.safeParse(rawData)
   if (!parsed.success) {

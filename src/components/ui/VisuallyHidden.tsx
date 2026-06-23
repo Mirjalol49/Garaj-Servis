@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, ReactNode, CSSProperties } from 'react';
+import { useState, useEffect, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 
 const hiddenStyles: CSSProperties = {
   display: 'inline-block',
@@ -13,7 +13,11 @@ const hiddenStyles: CSSProperties = {
   border: 0,
 };
 
-export const VisuallyHidden = ({ children, ...delegated }: { children: ReactNode, [key: string]: any }) => {
+type VisuallyHiddenProps = HTMLAttributes<HTMLSpanElement> & {
+  children: ReactNode
+}
+
+export const VisuallyHidden = ({ children, ...delegated }: VisuallyHiddenProps) => {
   const [forceShow, setForceShow] = useState(false);
 
   useEffect(() => {

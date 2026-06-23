@@ -14,7 +14,7 @@ export function useRetryUntilResolved<T>(
       const result = await callback();
       setIsResolved(true);
       setData(result);
-    } catch (error) {
+    } catch {
       // Intentionally swallow error and keep retrying
       console.warn('Retrying async operation...');
     }
