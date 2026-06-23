@@ -6,23 +6,23 @@ import { createClient } from '@/lib/supabase/server'
 import { z } from 'zod'
 
 const loginSchema = z.object({
-  email: z.string().email(),
+  phone: z.string().trim().regex(/^\+?[0-9]{7,15}$/),
   password: z.string().min(6),
 })
 
 export async function login(formData: FormData) {
-  const email = formData.get('email') as string
-  const password = formData.get('password') as string
+  const phone = String(formData.get('phone') ?? '')
+  const password = String(formData.get('password') ?? '')
 
-  const parsed = loginSchema.safeParse({ email, password })
+  const parsed = loginSchema.safeParse({ phone, password })
   if (!parsed.success) {
-    return { error: 'Invalid email or password format.' }
+    return { error: 'Invalid phone number or password format.' }
   }
 
   const supabase = await createClient()
 
   const { error } = await supabase.auth.signInWithPassword({
-    email: parsed.data.email,
+    phone: parsed.data.phone,
     password: parsed.data.password,
   })
 

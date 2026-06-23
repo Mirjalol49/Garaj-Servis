@@ -29,7 +29,7 @@ export default function LoginPage() {
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold tracking-tight">Login</CardTitle>
             <CardDescription>
-              Enter your email and password to access the workshop dashboard.
+              Enter your phone number and password to access the workshop dashboard.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -40,14 +40,14 @@ export default function LoginPage() {
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="phone">Phone number</Label>
               <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="m@example.com"
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="937489141"
                 required
-                autoComplete="email"
+                autoComplete="tel"
                 disabled={isLoading}
               />
             </div>
