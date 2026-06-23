@@ -27,6 +27,7 @@ export function CreateCompanyForm() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      {/* @ts-expect-error React 19 type incompatibility with Radix UI */}
       <DialogTrigger asChild>
         <Button className="transition-transform active:scale-[0.98]">Add Company</Button>
       </DialogTrigger>
