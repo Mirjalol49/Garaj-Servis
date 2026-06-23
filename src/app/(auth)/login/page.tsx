@@ -11,6 +11,11 @@ import { AlertCircle } from 'lucide-react'
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [phone, setPhone] = useState('')
+
+  function handlePhoneChange(value: string) {
+    setPhone(value.replace(/\D/g, '').slice(0, 15))
+  }
 
   async function handleSubmit(formData: FormData) {
     setIsLoading(true)
@@ -46,9 +51,13 @@ export default function LoginPage() {
                 name="phone"
                 type="tel"
                 placeholder="937489141"
+                value={phone}
+                inputMode="numeric"
+                pattern="[0-9]*"
                 required
-                autoComplete="tel"
+                autoComplete="off"
                 disabled={isLoading}
+                onChange={(event) => handlePhoneChange(event.target.value)}
               />
             </div>
             <div className="space-y-2">
