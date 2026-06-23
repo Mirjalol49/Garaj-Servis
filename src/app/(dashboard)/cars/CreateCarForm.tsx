@@ -9,7 +9,12 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
 
-export function CreateCarForm({ companies }: { companies: any[] }) {
+type CompanyOption = {
+  id: string
+  name: string
+}
+
+export function CreateCarForm({ companies }: { companies: CompanyOption[] }) {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -28,9 +33,8 @@ export function CreateCarForm({ companies }: { companies: any[] }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {/* @ts-expect-error React 19 type incompatibility with Radix UI */}
-      <DialogTrigger asChild>
-        <Button className="transition-transform active:scale-[0.98]">Add Car</Button>
+      <DialogTrigger render={<Button className="transition-transform active:scale-[0.98]" />}>
+        Add Car
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
