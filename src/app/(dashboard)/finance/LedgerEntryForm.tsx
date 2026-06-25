@@ -62,10 +62,10 @@ export default function LedgerEntryForm({
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="rounded-2xl border border-[#262626] bg-[#161616] p-5">
+    <form ref={formRef} onSubmit={handleSubmit} className="rounded-2xl border border-border bg-card p-5">
       <div className="mb-4">
-        <p className="text-xs font-semibold uppercase tracking-widest text-[#859585] font-[var(--font-geist)]">New ledger entry</p>
-        {error && <p className="mt-2 text-sm text-[#ffb4ab]">{error}</p>}
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground font-[var(--font-geist)]">New ledger entry</p>
+        {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
       </div>
 
       <div className="grid gap-3 md:grid-cols-3">
@@ -73,19 +73,19 @@ export default function LedgerEntryForm({
           name="entry_type"
           value={entryType}
           onChange={(event) => setEntryType(event.target.value)}
-          className="h-10 rounded-md border border-[#3b4a3d] bg-[#0d0d0d] px-3 text-sm text-[#dbe5d9]"
+          className="h-10 rounded-md border border-border bg-muted px-3 text-sm text-foreground"
         >
           {ENTRY_TYPES.map((type) => (
             <option key={type.value} value={type.value}>{type.label}</option>
           ))}
         </select>
         <Input name="amount" type="number" step="0.01" min="0.01" placeholder="Amount" required disabled={isPending} />
-        <select name="payment_method" defaultValue="cash" className="h-10 rounded-md border border-[#3b4a3d] bg-[#0d0d0d] px-3 text-sm text-[#dbe5d9]">
+        <select name="payment_method" defaultValue="cash" className="h-10 rounded-md border border-border bg-muted px-3 text-sm text-foreground">
           {PAYMENT_METHODS.map((method) => (
             <option key={method.value} value={method.value}>{method.label}</option>
           ))}
         </select>
-        <select name="job_order_id" defaultValue="" className="h-10 rounded-md border border-[#3b4a3d] bg-[#0d0d0d] px-3 text-sm text-[#dbe5d9]">
+        <select name="job_order_id" defaultValue="" className="h-10 rounded-md border border-border bg-muted px-3 text-sm text-foreground">
           <option value="">No job selected</option>
           {jobs.map((job) => (
             <option key={job.id} value={job.id}>{job.label}</option>
@@ -95,7 +95,7 @@ export default function LedgerEntryForm({
           name="customer_company_id"
           defaultValue=""
           required={entryType === 'customer_payment'}
-          className="h-10 rounded-md border border-[#3b4a3d] bg-[#0d0d0d] px-3 text-sm text-[#dbe5d9]"
+          className="h-10 rounded-md border border-border bg-muted px-3 text-sm text-foreground"
         >
           <option value="">No customer selected</option>
           {companies.map((company) => (
@@ -106,7 +106,7 @@ export default function LedgerEntryForm({
           name="master_id"
           defaultValue=""
           required={entryType === 'master_payment'}
-          className="h-10 rounded-md border border-[#3b4a3d] bg-[#0d0d0d] px-3 text-sm text-[#dbe5d9]"
+          className="h-10 rounded-md border border-border bg-muted px-3 text-sm text-foreground"
         >
           <option value="">No master selected</option>
           {masters.map((master) => (
@@ -114,7 +114,7 @@ export default function LedgerEntryForm({
           ))}
         </select>
         {entryType === 'adjustment' && (
-          <select name="direction" defaultValue="in" className="h-10 rounded-md border border-[#3b4a3d] bg-[#0d0d0d] px-3 text-sm text-[#dbe5d9]">
+          <select name="direction" defaultValue="in" className="h-10 rounded-md border border-border bg-muted px-3 text-sm text-foreground">
             <option value="in">Cash in</option>
             <option value="out">Cash out</option>
           </select>

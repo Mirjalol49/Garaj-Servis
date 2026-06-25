@@ -142,23 +142,23 @@ export default function JobFinancePanel({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
           { label: 'Job Expenses', value: totals.jobExpenses, color: 'text-[#ffba79]' },
-          { label: 'Customer Paid', value: totals.customerPayments, color: 'text-[#00e475]' },
-          { label: 'Receivable', value: totals.receivable, color: totals.receivable > 0 ? 'text-[#ffba79]' : 'text-[#00e475]' },
-          { label: 'Master Payable', value: totals.masterPayable, color: totals.masterPayable > 0 ? 'text-[#ffba79]' : 'text-[#00e475]' },
+          { label: 'Customer Paid', value: totals.customerPayments, color: 'text-primary' },
+          { label: 'Receivable', value: totals.receivable, color: totals.receivable > 0 ? 'text-[#ffba79]' : 'text-primary' },
+          { label: 'Master Payable', value: totals.masterPayable, color: totals.masterPayable > 0 ? 'text-[#ffba79]' : 'text-primary' },
         ].map(({ label, value, color }) => (
-          <div key={label} className="rounded-xl border border-[#262626] bg-[#0d0d0d] px-4 py-3">
-            <p className="text-xs uppercase tracking-widest text-[#859585] font-[var(--font-geist)]">{label}</p>
+          <div key={label} className="rounded-xl border border-border bg-muted px-4 py-3">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-[var(--font-geist)]">{label}</p>
             <p className={`mt-1 font-mono text-xl font-semibold ${color}`}>{formatMoney(value)}</p>
           </div>
         ))}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <form ref={expenseFormRef} onSubmit={submitExpense} className="space-y-3 rounded-xl border border-[#262626] bg-[#0d0d0d] p-4">
+        <form ref={expenseFormRef} onSubmit={submitExpense} className="space-y-3 rounded-xl border border-border bg-muted p-4">
           <input type="hidden" name="job_order_id" value={jobId} />
-          <p className="text-sm font-semibold text-[#dbe5d9]">Add job expense</p>
-          {expenseError && <p className="text-xs text-[#ffb4ab]">{expenseError}</p>}
-          <select name="expense_type" defaultValue="part" className="h-10 w-full rounded-md border border-[#3b4a3d] bg-[#161616] px-3 text-sm text-[#dbe5d9]">
+          <p className="text-sm font-semibold text-foreground">Add job expense</p>
+          {expenseError && <p className="text-xs text-destructive">{expenseError}</p>}
+          <select name="expense_type" defaultValue="part" className="h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-foreground">
             {EXPENSE_TYPES.map((type) => (
               <option key={type.value} value={type.value}>{type.label}</option>
             ))}
@@ -172,14 +172,14 @@ export default function JobFinancePanel({
           <Button type="submit" size="sm" className="w-full" disabled={isPending}>Save expense</Button>
         </form>
 
-        <form ref={customerPaymentFormRef} onSubmit={submitCustomerPayment} className="space-y-3 rounded-xl border border-[#262626] bg-[#0d0d0d] p-4">
+        <form ref={customerPaymentFormRef} onSubmit={submitCustomerPayment} className="space-y-3 rounded-xl border border-border bg-muted p-4">
           <input type="hidden" name="job_order_id" value={jobId} />
           <input type="hidden" name="customer_company_id" value={customerCompanyId ?? ''} />
           <input type="hidden" name="entry_type" value="customer_payment" />
-          <p className="text-sm font-semibold text-[#dbe5d9]">Customer payment</p>
-          {customerPaymentError && <p className="text-xs text-[#ffb4ab]">{customerPaymentError}</p>}
+          <p className="text-sm font-semibold text-foreground">Customer payment</p>
+          {customerPaymentError && <p className="text-xs text-destructive">{customerPaymentError}</p>}
           <Input name="amount" type="number" step="0.01" min="0.01" placeholder="Amount received" required disabled={isPending} />
-          <select name="payment_method" defaultValue="cash" className="h-10 w-full rounded-md border border-[#3b4a3d] bg-[#161616] px-3 text-sm text-[#dbe5d9]">
+          <select name="payment_method" defaultValue="cash" className="h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-foreground">
             {PAYMENT_METHODS.map((method) => (
               <option key={method.value} value={method.value}>{method.label}</option>
             ))}
@@ -189,19 +189,19 @@ export default function JobFinancePanel({
           <Button type="submit" size="sm" className="w-full" disabled={isPending || !customerCompanyId}>Record payment</Button>
         </form>
 
-        <form ref={masterPaymentFormRef} onSubmit={submitMasterPayment} className="space-y-3 rounded-xl border border-[#262626] bg-[#0d0d0d] p-4">
+        <form ref={masterPaymentFormRef} onSubmit={submitMasterPayment} className="space-y-3 rounded-xl border border-border bg-muted p-4">
           <input type="hidden" name="job_order_id" value={jobId} />
           <input type="hidden" name="entry_type" value="master_payment" />
-          <p className="text-sm font-semibold text-[#dbe5d9]">Master payment</p>
-          {masterPaymentError && <p className="text-xs text-[#ffb4ab]">{masterPaymentError}</p>}
-          <select name="master_id" defaultValue="" required className="h-10 w-full rounded-md border border-[#3b4a3d] bg-[#161616] px-3 text-sm text-[#dbe5d9]">
+          <p className="text-sm font-semibold text-foreground">Master payment</p>
+          {masterPaymentError && <p className="text-xs text-destructive">{masterPaymentError}</p>}
+          <select name="master_id" defaultValue="" required className="h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-foreground">
             <option value="" disabled>Select master</option>
             {masters.map((master) => (
               <option key={master.id} value={master.id}>{master.name}</option>
             ))}
           </select>
           <Input name="amount" type="number" step="0.01" min="0.01" placeholder="Amount paid" required disabled={isPending} />
-          <select name="payment_method" defaultValue="cash" className="h-10 w-full rounded-md border border-[#3b4a3d] bg-[#161616] px-3 text-sm text-[#dbe5d9]">
+          <select name="payment_method" defaultValue="cash" className="h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-foreground">
             {PAYMENT_METHODS.map((method) => (
               <option key={method.value} value={method.value}>{method.label}</option>
             ))}
@@ -213,17 +213,17 @@ export default function JobFinancePanel({
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[#859585] font-[var(--font-geist)]">Expenses</p>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground font-[var(--font-geist)]">Expenses</p>
           {expenses.length === 0 ? (
-            <p className="text-sm text-[#859585]">No expenses recorded.</p>
+            <p className="text-sm text-muted-foreground">No expenses recorded.</p>
           ) : (
             <div className="space-y-2">
               {expenses.map((expense) => (
-                <div key={expense.id} className="rounded-xl border border-[#262626] bg-[#0d0d0d] px-4 py-3">
+                <div key={expense.id} className="rounded-xl border border-border bg-muted px-4 py-3">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-sm font-medium text-[#dbe5d9]">{expense.description}</p>
-                      <p className="text-xs text-[#859585]">
+                      <p className="text-sm font-medium text-foreground">{expense.description}</p>
+                      <p className="text-xs text-muted-foreground">
                         {expense.expense_type.replaceAll('_', ' ')}
                         {expense.supplier_name ? ` · ${expense.supplier_name}` : ''}
                       </p>
@@ -237,23 +237,23 @@ export default function JobFinancePanel({
         </div>
 
         <div>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[#859585] font-[var(--font-geist)]">Ledger</p>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground font-[var(--font-geist)]">Ledger</p>
           {ledgerEntries.length === 0 ? (
-            <p className="text-sm text-[#859585]">No payments recorded.</p>
+            <p className="text-sm text-muted-foreground">No payments recorded.</p>
           ) : (
             <div className="space-y-2">
               {ledgerEntries.map((entry) => (
-                <div key={entry.id} className="rounded-xl border border-[#262626] bg-[#0d0d0d] px-4 py-3">
+                <div key={entry.id} className="rounded-xl border border-border bg-muted px-4 py-3">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-sm font-medium capitalize text-[#dbe5d9]">{labelForEntry(entry.entry_type)}</p>
-                      <p className="text-xs text-[#859585]">
+                      <p className="text-sm font-medium capitalize text-foreground">{labelForEntry(entry.entry_type)}</p>
+                      <p className="text-xs text-muted-foreground">
                         {new Date(entry.entry_date).toLocaleDateString('en-GB')}
                         {entry.payment_method ? ` · ${entry.payment_method.replaceAll('_', ' ')}` : ''}
                       </p>
-                      {entry.description && <p className="mt-1 text-xs text-[#859585]">{entry.description}</p>}
+                      {entry.description && <p className="mt-1 text-xs text-muted-foreground">{entry.description}</p>}
                     </div>
-                    <p className={`font-mono text-sm font-semibold ${entry.direction === 'in' ? 'text-[#00e475]' : 'text-[#ffba79]'}`}>
+                    <p className={`font-mono text-sm font-semibold ${entry.direction === 'in' ? 'text-primary' : 'text-[#ffba79]'}`}>
                       {entry.direction === 'in' ? '+' : '-'}{formatMoney(entry.amount)}
                     </p>
                   </div>

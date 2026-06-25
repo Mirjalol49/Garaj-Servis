@@ -20,8 +20,8 @@ const PHOTO_TYPE_LABELS: Record<PhotoType, string> = {
 
 const PHOTO_TYPE_COLORS: Record<PhotoType, string> = {
   intake: 'text-[#6eb3ff] border-[#0068ed]/30 bg-[#0068ed]/10',
-  damage: 'text-[#ffb4ab] border-[#93000a]/30 bg-[#93000a]/10',
-  progress: 'text-[#00e475] border-[#00e475]/30 bg-[#00e475]/10',
+  damage: 'text-destructive border-destructive/30 bg-destructive/10',
+  progress: 'text-primary border-primary/30 bg-primary/10',
   parts: 'text-[#ffba79] border-[#ffdec4]/30 bg-[#ffdec4]/10',
   final: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
 }
@@ -149,7 +149,7 @@ export default function PhotoUploader({
             className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-150 ${
               selectedType === type
                 ? PHOTO_TYPE_COLORS[type]
-                : 'text-[#859585] border-[#3b4a3d] bg-transparent hover:border-[#859585]'
+                : 'text-muted-foreground border-border bg-transparent hover:border-muted-foreground'
             }`}
           >
             {PHOTO_TYPE_LABELS[type]}
@@ -165,15 +165,15 @@ export default function PhotoUploader({
         onClick={() => fileInputRef.current?.click()}
         className={`relative flex flex-col items-center justify-center gap-2 h-32 rounded-xl border-2 border-dashed cursor-pointer transition-all duration-200 ${
           isDragOver
-            ? 'border-[#00e475] bg-[#00e475]/5'
-            : 'border-[#3b4a3d] bg-[#0d0d0d] hover:border-[#859585] hover:bg-[#161616]'
+            ? 'border-primary bg-primary/5'
+            : 'border-border bg-muted hover:border-muted-foreground hover:bg-card'
         }`}
       >
-        <ImagePlus className={`w-6 h-6 ${isDragOver ? 'text-[#00e475]' : 'text-[#3b4a3d]'}`} />
-        <p className="text-xs text-[#859585]">
-          Drop photos here or <span className="text-[#dbe5d9] underline">browse</span>
+        <ImagePlus className={`w-6 h-6 ${isDragOver ? 'text-primary' : 'text-muted-foreground'}`} />
+        <p className="text-xs text-muted-foreground">
+          Drop photos here or <span className="text-foreground underline">browse</span>
         </p>
-        <p className="text-xs text-[#3b4a3d]">
+        <p className="text-xs text-muted-foreground">
           Uploading as <span className={`font-semibold ${PHOTO_TYPE_COLORS[selectedType].split(' ')[0]}`}>{PHOTO_TYPE_LABELS[selectedType]}</span>
         </p>
         <input
@@ -192,17 +192,17 @@ export default function PhotoUploader({
           {queue.map((item, idx) => (
             <div
               key={idx}
-              className="flex items-center gap-3 px-3 py-2 rounded-xl bg-[#0d0d0d] border border-[#262626]"
+              className="flex items-center gap-3 px-3 py-2 rounded-xl bg-muted border border-border"
             >
               {/* Thumbnail */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={item.preview}
                 alt=""
-                className="w-10 h-10 rounded-lg object-cover border border-[#262626] shrink-0"
+                className="w-10 h-10 rounded-lg object-cover border border-border shrink-0"
               />
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-[#dbe5d9] truncate">{item.file.name}</p>
+                <p className="text-xs text-foreground truncate">{item.file.name}</p>
                 <span className={`text-xs font-semibold ${PHOTO_TYPE_COLORS[item.type].split(' ')[0]}`}>
                   {PHOTO_TYPE_LABELS[item.type]}
                 </span>
@@ -210,14 +210,14 @@ export default function PhotoUploader({
               {/* Status */}
               <div className="shrink-0">
                 {item.status === 'pending' && (
-                  <button onClick={() => removeFromQueue(idx)} className="text-[#3b4a3d] hover:text-[#ffb4ab]">
+                  <button onClick={() => removeFromQueue(idx)} className="text-muted-foreground hover:text-destructive">
                     <X className="w-4 h-4" />
                   </button>
                 )}
                 {item.status === 'uploading' && <Loader2 className="w-4 h-4 text-[#0068ed] animate-spin" />}
-                {item.status === 'done' && <CheckCircle2 className="w-4 h-4 text-[#00e475]" />}
+                {item.status === 'done' && <CheckCircle2 className="w-4 h-4 text-primary" />}
                 {item.status === 'error' && (
-                  <div title={item.error}><AlertCircle className="w-4 h-4 text-[#ffb4ab]" /></div>
+                  <div title={item.error}><AlertCircle className="w-4 h-4 text-destructive" /></div>
                 )}
               </div>
             </div>

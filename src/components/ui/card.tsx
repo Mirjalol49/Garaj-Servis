@@ -12,7 +12,7 @@ function Card({
       data-slot="card"
       data-size={size}
       className={cn(
-        "group/card flex flex-col gap-[--card-spacing] overflow-hidden rounded-2xl bg-[#161616] py-[--card-spacing] text-sm text-[#dbe5d9] border border-[#262626] [--card-spacing:1.5rem] data-[size=sm]:[--card-spacing:1rem] transition-all duration-300 hover:border-[#3b4a3d] hover:shadow-[0_0_20px_rgba(0,228,117,0.07)]",
+        "group/card flex flex-col gap-[--card-spacing] overflow-hidden rounded-2xl bg-card py-[--card-spacing] text-sm text-foreground border border-border [--card-spacing:1.5rem] data-[size=sm]:[--card-spacing:1rem] transition-all duration-300 hover:border-primary/30 hover:shadow-[0_4px_20px_rgba(0,0,0,0.05)] dark:hover:shadow-[0_0_20px_rgba(0,228,117,0.07)]",
         className
       )}
       {...props}
@@ -38,7 +38,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-title"
       className={cn(
-        "font-sans text-base font-semibold leading-snug tracking-tight text-[#dbe5d9] group-data-[size=sm]/card:text-sm",
+        "font-sans text-base font-semibold leading-snug tracking-tight text-foreground group-data-[size=sm]/card:text-sm",
         className
       )}
       {...props}
@@ -51,7 +51,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-description"
       className={cn(
-        "text-xs font-medium uppercase tracking-widest text-[#859585] font-[var(--font-geist)]",
+        "text-xs font-medium uppercase tracking-widest text-muted-foreground font-[var(--font-geist)]",
         className
       )}
       {...props}
@@ -87,7 +87,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-footer"
       className={cn(
-        "flex items-center rounded-b-2xl border-t border-[#262626] bg-[#0d0d0d] p-[--card-spacing]",
+        "flex items-center rounded-b-2xl border-t border-border bg-muted p-[--card-spacing]",
         className
       )}
       {...props}

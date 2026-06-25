@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { requireAuth } from '@/lib/auth/utils'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -16,10 +15,10 @@ const STATUS_STYLES: Record<string, string> = {
   opened: 'bg-[#0068ed]/15 text-[#6eb3ff] border border-[#0068ed]/30',
   diagnosing: 'bg-[#ffdec4]/10 text-[#ffba79] border border-[#ffdec4]/20',
   waiting_approval: 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20',
-  in_progress: 'bg-[#00e475]/10 text-[#00e475] border border-[#00e475]/20',
+  in_progress: 'bg-primary/10 text-primary border border-primary/20',
   ready: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
-  delivered: 'bg-[#3b4a3d] text-[#859585] border border-[#3b4a3d]',
-  cancelled: 'bg-[#93000a]/15 text-[#ffb4ab] border border-[#93000a]/30',
+  delivered: 'bg-muted text-muted-foreground border border-border',
+  cancelled: 'bg-destructive/10 text-destructive border border-destructive/30',
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -37,7 +36,6 @@ export default async function JobsPage({
 }: {
   searchParams: Promise<{ status?: string }>
 }) {
-  await requireAuth()
   const supabase = await createClient()
   const { status } = await searchParams
 
@@ -66,10 +64,10 @@ export default async function JobsPage({
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#859585] font-[var(--font-geist)] mb-1">
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground font-[var(--font-geist)] mb-1">
             Workshop
           </p>
-          <h1 className="text-2xl font-semibold tracking-tight text-[#dbe5d9]">Job Orders</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Job Orders</h1>
         </div>
         <Link href="/jobs/new">
           <Button size="default">
@@ -80,7 +78,7 @@ export default async function JobsPage({
       </div>
 
       {/* Status filter tabs */}
-      <div className="flex items-center gap-1 mb-6 p-1 bg-[#161616] border border-[#262626] rounded-xl w-fit">
+      <div className="flex items-center gap-1 mb-6 p-1 bg-card border border-border rounded-xl w-fit">
         {[
           { label: 'Active', value: 'active' },
           { label: 'All', value: 'all' },
@@ -96,8 +94,8 @@ export default async function JobsPage({
               className={[
                 'px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-150',
                 isActive
-                  ? 'bg-[#00e475] text-[#00210b]'
-                  : 'text-[#859585] hover:text-[#dbe5d9] hover:bg-[#232c24]',
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-accent',
               ].join(' ')}
             >
               {label}
@@ -108,7 +106,7 @@ export default async function JobsPage({
 
       {/* Table */}
       {error ? (
-        <p className="text-[#ffb4ab] text-sm">Failed to load jobs.</p>
+        <p className="text-destructive text-sm">Failed to load jobs.</p>
       ) : jobs && jobs.length > 0 ? (
         <Table>
           <TableHeader>
@@ -130,27 +128,27 @@ export default async function JobsPage({
                   <TableCell>
                     <Link
                       href={`/jobs/${job.id}`}
-                      className="font-mono text-[#00e475] hover:underline text-xs font-semibold tracking-wider"
+                      className="font-mono text-primary hover:underline text-xs font-semibold tracking-wider"
                     >
                       {job.job_number}
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <span className="font-semibold text-[#dbe5d9]">{car?.plate_number}</span>
+                    <span className="font-semibold text-foreground">{car?.plate_number}</span>
                     {car?.make && (
-                      <span className="ml-2 text-[#859585] text-xs">{car.make} {car.model}</span>
+                      <span className="ml-2 text-muted-foreground text-xs">{car.make} {car.model}</span>
                     )}
                   </TableCell>
-                  <TableCell className="text-[#bacbb9]">{company?.name ?? '—'}</TableCell>
+                  <TableCell className="text-muted-foreground">{company?.name ?? '—'}</TableCell>
                   <TableCell>
                     <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_STYLES[job.status] ?? ''}`}>
                       {STATUS_LABELS[job.status] ?? job.status}
                     </span>
                   </TableCell>
-                  <TableCell className="max-w-[200px] truncate text-[#859585]">
+                  <TableCell className="max-w-[200px] truncate text-muted-foreground">
                     {job.problem_description}
                   </TableCell>
-                  <TableCell className="text-[#859585] text-xs">
+                  <TableCell className="text-muted-foreground text-xs">
                     {new Date(job.opened_at).toLocaleDateString()}
                   </TableCell>
                 </TableRow>
@@ -159,12 +157,12 @@ export default async function JobsPage({
           </TableBody>
         </Table>
       ) : (
-        <div className="flex flex-col items-center justify-center py-24 rounded-2xl border border-dashed border-[#3b4a3d] bg-[#0d0d0d]">
-          <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-[#161616] border border-[#262626] mb-4">
-            <Wrench className="w-6 h-6 text-[#3b4a3d]" />
+        <div className="flex flex-col items-center justify-center py-24 rounded-2xl border border-dashed border-border bg-muted">
+          <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-card border border-border mb-4">
+            <Wrench className="w-6 h-6 text-muted-foreground" />
           </div>
-          <p className="text-[#dbe5d9] font-semibold mb-1">No job orders yet</p>
-          <p className="text-[#859585] text-sm mb-5">Open the first job to get started.</p>
+          <p className="text-foreground font-semibold mb-1">No job orders yet</p>
+          <p className="text-muted-foreground text-sm mb-5">Open the first job to get started.</p>
           <Link href="/jobs/new">
             <Button>
               <Plus className="w-4 h-4" />

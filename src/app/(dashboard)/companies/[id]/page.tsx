@@ -58,7 +58,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
       </div>
 
       <h2 className="text-2xl font-bold tracking-tight mt-8">Fleet Vehicles</h2>
-      <div className="rounded-md border">
+      <div className="w-full">
         <Table>
           <TableHeader>
             <TableRow>

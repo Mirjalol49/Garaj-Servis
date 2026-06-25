@@ -16,11 +16,23 @@ const constraintMigration = readFileSync(
   join(root, 'supabase/migrations/20260623131821_section_13_database_constraints.sql'),
   'utf8'
 )
-const allSql = `${initMigration}\n${photoStorageMigration}\n${rlsCleanupMigration}\n${constraintMigration}`
+const optionalCarProfileMigration = readFileSync(
+  join(root, 'supabase/migrations/20260623143816_optional_car_profile_fields.sql'),
+  'utf8'
+)
+const allSql = `${initMigration}\n${photoStorageMigration}\n${rlsCleanupMigration}\n${constraintMigration}\n${optionalCarProfileMigration}`
 
 describe('database schema contract', () => {
-  test('duplicate car plates are blocked', () => {
+  test('car plates are optional but still unique when present', () => {
     expect(initMigration).toMatch(/plate_number text not null unique/)
+    expect(optionalCarProfileMigration).toContain('alter column plate_number drop not null')
+  })
+
+  test('cars support optional profile fields', () => {
+    expect(optionalCarProfileMigration).toContain('add column if not exists car_name text')
+    expect(optionalCarProfileMigration).toContain('add column if not exists owner_phone text')
+    expect(optionalCarProfileMigration).toContain('add column if not exists notes text')
+    expect(optionalCarProfileMigration).toContain('add column if not exists profile_image_path text')
   })
 
   test('jobs must reference a car', () => {
@@ -71,5 +83,12 @@ describe('database schema contract', () => {
     expect(allSql).toContain('Allow authenticated job photo uploads')
     expect(allSql).toContain('Allow authenticated job photo reads')
     expect(allSql).toContain('Allow authenticated job photo deletes')
+  })
+
+  test('storage policies keep car photos private and authenticated', () => {
+    expect(optionalCarProfileMigration).toContain("values ('car-photos', 'car-photos', false)")
+    expect(optionalCarProfileMigration).toContain('Allow authenticated car photo uploads')
+    expect(optionalCarProfileMigration).toContain('Allow authenticated car photo reads')
+    expect(optionalCarProfileMigration).toContain('Allow authenticated car photo deletes')
   })
 })

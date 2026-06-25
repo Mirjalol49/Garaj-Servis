@@ -21,11 +21,11 @@ interface Step {
 }
 
 const STEP_STATUS_STYLES: Record<string, string> = {
-  pending: 'text-[#859585]',
+  pending: 'text-muted-foreground',
   assigned: 'text-[#0068ed]',
-  in_progress: 'text-[#00e475]',
+  in_progress: 'text-primary',
   done: 'text-emerald-400',
-  cancelled: 'text-[#ffb4ab]',
+  cancelled: 'text-destructive',
 }
 
 function formatMoney(n: number) {
@@ -81,19 +81,19 @@ export default function JobStepsPanel({ jobId, initialSteps, masters }: Props) {
       {/* Summary row */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: 'Revenue', value: formatMoney(totalRevenue), color: 'text-[#00e475]' },
+          { label: 'Revenue', value: formatMoney(totalRevenue), color: 'text-primary' },
           { label: 'Master Cost', value: formatMoney(totalCost), color: 'text-[#ffba79]' },
-          { label: 'Step Profit', value: formatMoney(totalRevenue - totalCost), color: totalRevenue - totalCost >= 0 ? 'text-[#00e475]' : 'text-[#ffb4ab]' },
+          { label: 'Step Profit', value: formatMoney(totalRevenue - totalCost), color: totalRevenue - totalCost >= 0 ? 'text-primary' : 'text-destructive' },
         ].map(({ label, value, color }) => (
-          <div key={label} className="px-4 py-3 rounded-xl bg-[#0d0d0d] border border-[#262626]">
-            <p className="text-xs uppercase tracking-widest text-[#859585] font-[var(--font-geist)] mb-1">{label}</p>
+          <div key={label} className="px-4 py-3 rounded-xl bg-muted border border-border">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-[var(--font-geist)] mb-1">{label}</p>
             <p className={`text-lg font-semibold ${color}`}>{value}</p>
           </div>
         ))}
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 text-sm text-[#ffb4ab] bg-[#93000a]/20 border border-[#93000a]/30 px-3 py-2 rounded-xl">
+        <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 border border-destructive/30 px-3 py-2 rounded-xl">
           <AlertCircle className="w-4 h-4 shrink-0" />{error}
         </div>
       )}
@@ -114,8 +114,8 @@ export default function JobStepsPanel({ jobId, initialSteps, masters }: Props) {
           <TableBody>
             {steps.map((step) => (
               <TableRow key={step.id}>
-                <TableCell className="font-medium text-[#dbe5d9]">{step.description}</TableCell>
-                <TableCell className="text-[#bacbb9]">{step.masters?.name ?? '—'}</TableCell>
+                <TableCell className="font-medium text-foreground">{step.description}</TableCell>
+                <TableCell className="text-muted-foreground">{step.masters?.name ?? '—'}</TableCell>
                 <TableCell>
                   <select
                     defaultValue={step.status}
@@ -123,13 +123,13 @@ export default function JobStepsPanel({ jobId, initialSteps, masters }: Props) {
                     className={`bg-transparent border-0 outline-none text-xs font-semibold cursor-pointer ${STEP_STATUS_STYLES[step.status]}`}
                   >
                     {['pending', 'assigned', 'in_progress', 'done', 'cancelled'].map((s) => (
-                      <option key={s} value={s} className="bg-[#161616] text-[#dbe5d9]">
+                      <option key={s} value={s} className="bg-card text-foreground">
                         {s.replace('_', ' ')}
                       </option>
                     ))}
                   </select>
                 </TableCell>
-                <TableCell className="text-right text-[#00e475] font-mono text-xs">
+                <TableCell className="text-right text-primary font-mono text-xs">
                   {formatMoney(Number(step.customer_price))}
                 </TableCell>
                 <TableCell className="text-right text-[#ffba79] font-mono text-xs">
@@ -140,7 +140,7 @@ export default function JobStepsPanel({ jobId, initialSteps, masters }: Props) {
                     type="button"
                     onClick={() => handleDelete(step.id)}
                     disabled={isPending}
-                    className="text-[#3b4a3d] hover:text-[#ffb4ab] transition-colors"
+                    className="text-muted-foreground hover:text-destructive transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -150,23 +150,23 @@ export default function JobStepsPanel({ jobId, initialSteps, masters }: Props) {
           </TableBody>
         </Table>
       ) : (
-        <p className="text-sm text-[#859585] text-center py-6">No steps added yet.</p>
+        <p className="text-sm text-muted-foreground text-center py-6">No steps added yet.</p>
       )}
 
       {/* Add step form */}
       {showForm ? (
         <form action={handleAddStep} className="rounded-xl border border-[#0068ed]/30 bg-[#0068ed]/5 p-4 space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#859585] font-[var(--font-geist)]">Add Step</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground font-[var(--font-geist)]">Add Step</p>
           <div className="space-y-1.5">
-            <Label className="text-xs text-[#859585]">Description *</Label>
+            <Label className="text-xs text-muted-foreground">Description *</Label>
             <Input name="description" required placeholder="e.g. Replace brake pads" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-xs text-[#859585]">Assign Master</Label>
+              <Label className="text-xs text-muted-foreground">Assign Master</Label>
               <select
                 name="assigned_master_id"
-                className="h-9 w-full rounded-xl border border-[#262626] bg-[#0A0A0A] px-3 text-sm text-[#dbe5d9] outline-none focus:border-[#0068ed]"
+                className="h-9 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-primary"
               >
                 <option value="">— Unassigned —</option>
                 {masters.map((m) => (
@@ -175,12 +175,12 @@ export default function JobStepsPanel({ jobId, initialSteps, masters }: Props) {
               </select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs text-[#859585]">Customer Price</Label>
+              <Label className="text-xs text-muted-foreground">Customer Price</Label>
               <Input name="customer_price" type="number" min="0" step="0.01" defaultValue="0" />
             </div>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs text-[#859585]">Master Cost</Label>
+            <Label className="text-xs text-muted-foreground">Master Cost</Label>
             <Input name="master_cost" type="number" min="0" step="0.01" defaultValue="0" />
           </div>
           <div className="flex gap-2 pt-1">

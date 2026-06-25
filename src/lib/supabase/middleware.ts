@@ -1,6 +1,28 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+const PROTECTED_PATHS = [
+  '/dashboard',
+  '/jobs',
+  '/cars',
+  '/companies',
+  '/masters',
+  '/finance',
+  '/settings',
+]
+
+const API_AUTH_PATHS = [
+  '/finance/export',
+]
+
+function isProtectedPath(pathname: string) {
+  return PROTECTED_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`))
+}
+
+function handlesOwnUnauthorizedResponse(pathname: string) {
+  return API_AUTH_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`))
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -37,7 +59,24 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (
+    !user &&
+    isProtectedPath(request.nextUrl.pathname) &&
+    !handlesOwnUnauthorizedResponse(request.nextUrl.pathname)
+  ) {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = '/login'
+    redirectUrl.search = ''
+
+    const redirectResponse = NextResponse.redirect(redirectUrl)
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie)
+    })
+
+    return redirectResponse
+  }
 
   return supabaseResponse
 }

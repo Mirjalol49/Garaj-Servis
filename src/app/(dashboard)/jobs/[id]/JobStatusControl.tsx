@@ -29,10 +29,10 @@ const STATUS_STYLES: Record<string, string> = {
   opened: 'bg-[#0068ed]/15 text-[#6eb3ff] border-[#0068ed]/30',
   diagnosing: 'bg-[#ffdec4]/10 text-[#ffba79] border-[#ffdec4]/20',
   waiting_approval: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-  in_progress: 'bg-[#00e475]/10 text-[#00e475] border-[#00e475]/20',
+  in_progress: 'bg-primary/10 text-primary border-primary/20',
   ready: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  delivered: 'bg-[#3b4a3d] text-[#859585] border-[#3b4a3d]',
-  cancelled: 'bg-[#93000a]/15 text-[#ffb4ab] border-[#93000a]/30',
+  delivered: 'bg-muted text-muted-foreground border-border',
+  cancelled: 'bg-destructive/10 text-destructive border-destructive/30',
 }
 
 type JobStatus = 'opened' | 'diagnosing' | 'waiting_approval' | 'in_progress' | 'ready' | 'delivered' | 'cancelled'
